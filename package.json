@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "browserify index.js > bundle.js"
+  },
+  "dependencies": {
+    "typeahead.an": "0.0.0",
+    "an": "0.0.0"
+  }
+}

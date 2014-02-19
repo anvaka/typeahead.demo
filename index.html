@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Typeahead directive demo</title>
+    <link rel="stylesheet" href="external/styles/bootstrap.min.css">
+  </head>
+
+  <body ng-controller='DemoCtrl'>
+    <pre>Model: {{asyncSelected | json}}</pre>
+    <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http"
+          autofocus
+          typeahead="address for address in getLocation($viewValue) | filter:$viewValue"
+          typeahead-loading="loadingLocations"
+          class="form-control">
+
+    <script type="text/javascript" charset="utf-8" src='external/angular.js'></script>
+    <script type="text/javascript" charset="utf-8" src='bundle.js'></script>
+  </body>
+
+</html>
