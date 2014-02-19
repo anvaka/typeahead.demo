@@ -1,9 +1,9 @@
 typeahead.demo
 ==============
 
-This demo shows how to use angular.js typeahead directive from npm.
+This demo shows how to use angular.js typeahead directive from npm. Interactive version is [available here](http://anvaka.github.io/typeahead.demo/).
 
-All I had to do is:
+## Steps to make this work
 
 Install directive from npm:
 
