@@ -11,7 +11,7 @@ Install directive from npm:
 npm i typeahead.an
 ```
 
-Require it from my main controller:
+Require it before angular application bootstrap:
 
 ``` js
 require('typeahead.an');
