@@ -25,3 +25,5 @@ Use it inside html:
       typeahead="address for address in getLocation($viewValue) | filter:$viewValue"
       typeahead-loading="loadingLocations">
 ```
+
+Please read more here: [anvaka/an](https://github.com/anvaka/an)
