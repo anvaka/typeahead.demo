@@ -11,13 +11,19 @@ Install directive from npm:
 npm i typeahead.an
 ```
 
-Require it before angular application bootstrap:
+Require npm direcives, before bootstraping your main angular app:
 
 ``` js
 require('typeahead.an');
+
+var ngApp = angular.module('MyModule', []);
+require('an').flush(ngApp);
+
+// Finally bootstrap it:
+angular.bootstrap(document, [ngApp.name]);
 ```
 
-Use it inside html:
+Now your directive is ready to be used inside html:
 
 ``` html
 <input type="text"
