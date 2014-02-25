@@ -1,6 +1,5 @@
-module.exports = DemoCtrl;
-
 require('typeahead.an'); // we are going to use typeahead in this demo
+
 require('an').controller(DemoCtrl);
 require('an').flush(); // flush and bootstrap angular app
 
