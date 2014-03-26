@@ -1,9 +1,9 @@
-;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = DemoCtrl;
-
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require('typeahead.an'); // we are going to use typeahead in this demo
+
 require('an').controller(DemoCtrl);
-require('an').flush(); // flush and bootstrap angular app
+var module = require('an').flush(); // flush and bootstrap angular app
+angular.bootstrap(document.body, [module.name]);
 
 function DemoCtrl($scope, $http) {
   $scope.getLocation = function(val) {
@@ -27,27 +27,21 @@ var directive = require('./lib/directive');
 var controller = require('./lib/controller');
 var filter = require('./lib/filter');
 
-var ngModule;
-
 module.exports = {
   directive: directive.register,
   controller: controller.register,
   filter: filter.register,
 
-  flush: function () {
-    debugger;
-    // todo: accept module;
-    if (!ngModule) {
-      ngModule = createModule();
+  flush: function (module) {
+    if (!module) {
+      module = createModule();
     }
 
-    controller.flush(ngModule);
-    directive.flush(ngModule);
-    filter.flush(ngModule);
+    controller.flush(module);
+    directive.flush(module);
+    filter.flush(module);
 
-    angular.bootstrap(document, [ngModule.name]);
-
-    return ngModule;
+    return module;
   }
 };
 
@@ -126,9 +120,11 @@ module.exports = function (fun) {
 module.exports = typeahead;
 
 require('./lib/popup'); // we need popup
-require('an').directive(typeahead); // export this as directive;
+require('an').directive(typeahead); // delay directive registration as much as we can
 
 function typeahead($compile, $parse, $q, $timeout, $document) {
+  
+  // yes, we can use regular common js packages:
   var $position = require('./lib/utils/position')(document, window);
   var HOT_KEYS = [9, 13, 27, 38, 40];
 
@@ -383,7 +379,7 @@ function typeahead($compile, $parse, $q, $timeout, $document) {
   };
 }
 
-},{"./lib/parser":11,"./lib/popup":12,"./lib/utils/position":13,"an":14}],8:[function(require,module,exports){
+},{"./lib/parser":11,"./lib/popup":12,"./lib/utils/position":13,"an":2}],8:[function(require,module,exports){
 module.exports = bindHtmlUnsafe;
 
 require('an').directive(bindHtmlUnsafe);
@@ -397,7 +393,7 @@ function bindHtmlUnsafe() {
   };
 }
 
-},{"an":14}],9:[function(require,module,exports){
+},{"an":2}],9:[function(require,module,exports){
 module.exports = highlightFilter;
 
 require('an').filter(highlightFilter);
@@ -412,14 +408,15 @@ function escapeRegexp(queryToEscape) {
   return queryToEscape.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
 }
 
-},{"an":14}],10:[function(require,module,exports){
+},{"an":2}],10:[function(require,module,exports){
 module.exports = require('an').directive(typeaheadMatch);
 
 require('./bindHtmlUnsafe'); // need bind-html-unsafe to use this
 
 var fs = require('fs');
+var defaultTemplate = "<a tabindex=\"-1\" bind-html-unsafe=\"match.label | highlightFilter:query\"></a>\n";
 
-function typeaheadMatch() {
+function typeaheadMatch($http, $templateCache, $compile, $parse) {
   return {
     restrict:'EA',
     scope: {
@@ -427,12 +424,22 @@ function typeaheadMatch() {
       match:'=',
       query:'='
     },
-    replace: true,
-    template: "<a tabindex=\"-1\" bind-html-unsafe=\"match.label | highlightFilter:query\"></a>\n"
+    link:function (scope, element, attrs) {
+      var tplUrl = $parse(attrs.templateUrl)(scope.$parent);
+      if (tplUrl) {
+        $http.get(tplUrl, {cache: $templateCache}).success(replaceElement);
+      } else {
+        replaceElement(defaultTemplate);
+      }
+
+      function replaceElement(tplContent) {
+        element.replaceWith($compile(tplContent.trim())(scope));
+      }
+    }
   };
 }
 
-},{"./bindHtmlUnsafe":8,"an":14,"fs":19}],11:[function(require,module,exports){
+},{"./bindHtmlUnsafe":8,"an":2,"fs":14}],11:[function(require,module,exports){
 module.exports = function ($parse) {
   var TYPEAHEAD_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
 
@@ -501,7 +508,7 @@ function typeaheadPopup() {
   };
 }
 
-},{"./highlightFilter":9,"./match":10,"an":14,"fs":19}],13:[function(require,module,exports){
+},{"./highlightFilter":9,"./match":10,"an":2,"fs":14}],13:[function(require,module,exports){
 /**
  * NOTE: This is a good candidate for a separate module
  *
@@ -655,20 +662,5 @@ module.exports = function (document, window) {
 };
 
 },{}],14:[function(require,module,exports){
-arguments[4][2][0].apply(exports,arguments)
-},{"./lib/controller":15,"./lib/directive":16,"./lib/filter":17}],15:[function(require,module,exports){
-module.exports=require(3)
-},{"./functionName":18}],16:[function(require,module,exports){
-module.exports=require(4)
-},{"./functionName":18}],17:[function(require,module,exports){
-module.exports=require(5)
-},{"./functionName":18}],18:[function(require,module,exports){
-module.exports=require(6)
-},{}],19:[function(require,module,exports){
-
-// not implemented
-// The reason for having an empty file and not throwing is to allow
-// untraditional implementation of this module.
 
 },{}]},{},[1])
-;
