@@ -1,33 +1,73 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Typeahead directive demo</title>
-    <link rel="stylesheet" href="external/styles/bootstrap.min.css">
-  </head>
 
-  <body ng-controller='DemoCtrl'>
-    <div class='container'>
-      <h2>Angular.js directives and npm</h2>
-      <div class='col-md-6'>
-        <input type="text" ng-model="addressModel" placeholder="Type address"
-              autofocus
-              typeahead="address for address in getLocation($viewValue) | filter:$viewValue"
-              typeahead-loading="loadingLocations"
-              class="form-control">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Typeahead directive demo</title>
+  <link rel="stylesheet" href="external/styles/bootstrap.min.css">
+  <style>
 
-              <hr>
-        <pre>Selected address: {{addressModel | json}}</pre>
-      <p >
-      This example uses angular.js typeahead directive, shared on npm.
-      Check source code here:
-      <a href='https://github.com/anvaka/typeahead.demo'>typeahead.demo</a>
+    .map-bit {
+      padding: 8px;
+    }
+    .active .map-bit {
+      background-color: #fefefe;
+      color: orange;
+    }
+  </style>
+</head>
+
+<body ng-controller='DemoCtrl'>
+  <div class='container'>
+    <h2>Angular.js directives and npm</h2>
+
+    <div class='col-md-6'>
+      <p>This is just a simple demo of how to create angular.js directives and
+        share then on npm. In particular, this demo shows a typeahead directive.</p>
+      <p>The source code for this demo can be found here:
+        <a href='https://github.com/anvaka/typeahead.demo'>typeahead.demo</a>
       </p>
-      </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class='col-md-6'>
+    <h3>Basic example</h3>
+    <p>
+      This is a very basic demo of typeahead directive:
+    </p>
+      <input type="text" ng-model="addressModel" placeholder="Type address"
+      autofocus
+      typeahead="address for address in getLocationString($viewValue)"
+      class="form-control">
+
+      <hr>
+      <pre>Selected address: {{addressModel | json}}</pre>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class='col-md-6'>
+    <h3>Custom template</h3>
+    <p>This demo shows how to render custom template:</p>
+      <input type="text" ng-model="customAddressModel" placeholder="Type address"
+              typeahead-input-formatter="formatAddress($model)"
+              typeahead-wait-ms='300'
+              typeahead="address for address in getLocationObject($viewValue)"
+              typeahead-template-url="addressTemplate.html"
+              class="form-control">
+      <script type="text/ng-template" id="addressTemplate.html">
+        <div class='map-bit'>
+          <p>
+            <strong>{{match.model.label}}</strong>
+          </p>
+          <img ng-src="{{match.model.mapUrl}}">
+        </div>
+      </script>
+      <hr>
+      <pre>Selected address: {{customAddressModel | json}}</pre>
     </div>
 
-    <script type="text/javascript" charset="utf-8" src='external/angular.js'></script>
+    <div class="clearfix"></div>
     <script type="text/javascript" charset="utf-8" src='bundle.js'></script>
-  </body>
+</body>
 
 </html>

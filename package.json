@@ -3,7 +3,8 @@
     "start": "browserify index.js > bundle.js"
   },
   "dependencies": {
-    "typeahead.an": "~0.0.0",
-    "an": "~0.0.0"
+    "an": "~0.0.0",
+    "angular": "^1.3.7",
+    "typeahead.an": "0.0.5"
   }
 }
